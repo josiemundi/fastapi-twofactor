@@ -78,7 +78,7 @@ def authenticate_user(fake_db, username: str, password: str):
     if not verify_password(password[:-6], user.hashed_password):
         return False
     totp = pyotp.TOTP(user.otp_secret)
-    if not password[-6:] == totp.now():
+    if not totp.verify(password[-6:]):
         return False
     return user
 
