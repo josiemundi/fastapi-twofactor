@@ -8,6 +8,8 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
 
+import pyotp
+
 # to get a string like this run:
 # openssl rand -hex 32
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
@@ -22,6 +24,7 @@ fake_users_db = {
         "email": "johndoe@example.com",
         "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
         "disabled": False,
+        "otp_secret": "LGLEREYEPVVWTLYO"
     }
 }
 
@@ -44,6 +47,7 @@ class User(BaseModel):
 
 class UserInDB(User):
     hashed_password: str
+    otp_secret: str
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -71,7 +75,10 @@ def authenticate_user(fake_db, username: str, password: str):
     user = get_user(fake_db, username)
     if not user:
         return False
-    if not verify_password(password, user.hashed_password):
+    if not verify_password(password[:-6], user.hashed_password):
+        return False
+    totp = pyotp.TOTP(user.otp_secret)
+    if not password[-6:] == totp.now():
         return False
     return user
 
