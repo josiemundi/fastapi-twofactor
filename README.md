@@ -1,7 +1,11 @@
 # fastapi-twofactor
-This repo is part of a tutorial for implementing two-factor authentication (One-Time Password) for Fast API using PyOTP library. The **v0** directory contains the original FastAPI security tutorial without two-factor authentication integrated. The **v1** directory is based on this but adds basic two-factor authentication using PyOTP.
+This repo is part of a tutorial for implementing two-factor authentication (One-Time Password) for Fast API using PyOTP library. 
 
-The full tutorial is available [here](https://developingfordata.com/2020/11/10/getting-started-with-two-factor-authentication-in-fastapi/).
+- **v0** directory: contains the original FastAPI security tutorial without two-factor authentication integrated. 
+- **v1** directory: based on this but adds basic two-factor authentication using PyOTP. 
+- **v2** directory: enables the use of a sqlite (or other) database and enables user administration such as creating new users and user level access control.
+
+The v1 tutorial is available [here](https://developingfordata.com/2020/11/10/getting-started-with-two-factor-authentication-in-fastapi/).
 
 This tutorial assumes you have Python 3 running. 
 
