@@ -1,6 +1,6 @@
 # code originally from - https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/
 from datetime import datetime, timedelta
-from typing import Optional, List
+from typing import Optional
 
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -140,18 +140,26 @@ async def read_users_me(
     return current_user
 
 
-@app.get("/users/me/items/")
-async def read_own_items(
-        current_user: schemas.User = Depends(get_current_active_user)):
-    return [{"item_id": "Foo", "owner": current_user.username}]
+@app.put("/users/me/", response_model=schemas.User)
+def user_update_own_record(user_update: schemas.UserUpdate, db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_active_user)):
+    db_user = crud.update_user_self(db, current_user, user_update)
+    return db_user
+    
 
+@app.get("/users/{user_id}", response_model=schemas.User)
+def get_user_by_id(
+    user_id: int,
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(get_current_active_admin_user)):
+    db_user = crud.get_user(db, user_id)
+    return db_user
 
-@app.get("/users/all/", response_model=List[schemas.User])
-def get_all_users(skip: int = 0,
-                  limit: int = 100,
-                  db: Session = Depends(get_db)):
-    users = crud.get_users(db, skip=skip, limit=limit)
-    return users
+# @app.put("/users/{user_id}", response_model=schemas.User)
+# def update_user_record(
+#     user_id: int, 
+#     db: Session = Depends(get_db),
+#     current_user: schemas.User = Depends(get_current_active_admin_user)):
+    
 
 
 @app.post("/users/", response_model=schemas.User)

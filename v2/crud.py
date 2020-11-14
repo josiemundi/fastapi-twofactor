@@ -35,3 +35,13 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+def update_user_self(db: Session, current_user: schemas.User, user_update: schemas.UserUpdate):
+    db_user = get_user(db, current_user.id)
+    db_user.email = user_update.email
+    db_user.username = user_update.username
+    db_user.full_name = user_update.full_name
+    db_user.hashed_password = pwd_context.hash(user_update.password)
+    db.commit()
+    db.refresh(db_user)
+    return db_user

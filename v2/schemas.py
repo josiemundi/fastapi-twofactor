@@ -12,16 +12,19 @@ class UserBase(BaseModel):
     username: str
     email: str = None
     full_name: Optional[str] = None
-    role : Role = Role.user
 
 
 class UserCreate(UserBase):
+    password: str
+    role: Role = Role.user
+
+class UserUpdate(UserBase):
     password: str
 
 
 class User(UserBase):
     id: int
-    disabled: bool
+    disabled: bool = False
 
     class Config:
         orm_mode = True
