@@ -33,13 +33,6 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
-class Token(BaseModel):
-    access_token: str
-    token_type: str
-
-
-class TokenData(BaseModel):
-    username: Optional[str] = None
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -94,7 +87,7 @@ def get_current_user(token: str = Depends(oauth2_scheme),
         username: str = payload.get("sub")
         if username is None:
             raise credentials_exception
-        token_data = TokenData(username=username)
+        token_data = schemas.TokenData(username=username)
     except JWTError:
         raise credentials_exception
     user = get_user(db, username=token_data.username)
@@ -118,7 +111,7 @@ def get_current_active_admin_user(
     return current_user
 
 
-@app.post("/token", response_model=Token)
+@app.post("/token", response_model=schemas.Token)
 def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(),
                            db: Session = Depends(get_db)):
     user = authenticate_user(db, form_data.username, form_data.password)
