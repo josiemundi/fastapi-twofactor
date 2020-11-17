@@ -1,5 +1,5 @@
 # fastapi-twofactor
-This repo is part of a tutorial for implementing two-factor authentication (One-Time Password) for Fast API using PyOTP library. 
+This repo is part of a tutorial for implementing two-factor authentication (One-Time Password) for Fast API using PyOTP library. It also includes the code for adding a backend user database with SQLAlchemy.
 
 - **v0** directory: contains the original FastAPI security tutorial without two-factor authentication integrated. 
 - **v1** directory: based on this but adds basic two-factor authentication using PyOTP. 
